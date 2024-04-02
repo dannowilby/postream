@@ -12,3 +12,5 @@ st.set_page_config(
 
 if 'current_page' not in st.session_state:
     st.session_state['current_page'] = 'overview'
+
+st.switch_page("pages/overview.py")

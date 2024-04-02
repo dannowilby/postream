@@ -1,5 +1,9 @@
-
 import streamlit as st
+
+st.set_page_config(
+   page_title="PostStream CMS - Overview",
+   page_icon="🧊",
+)
 
 if st.button("Create new post"):
     st.switch_page("pages/new_post.py")
