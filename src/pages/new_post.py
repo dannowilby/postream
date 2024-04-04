@@ -1,4 +1,6 @@
 import streamlit as st
+from streamlit_extras.row import row
+from streamlit_tags import st_tags
 
 st.set_page_config(
    page_title="PostStream CMS - Create new post",
@@ -16,17 +18,13 @@ post_contents = st.text_area("Post contents")
 
 project_type = st.selectbox("Post type", ("Article", "Project"))
 
+st_tags(label="Post tags", value=[], text="Press enter to add more.", suggestions=[], maxtags=-1)
+
 st.file_uploader("Post media", accept_multiple_files=True)
 
-st.subheader("Preview")
 st.divider()
 
-st.title(title)
-st.markdown(post_contents)
-
-st.divider()
-
-b1, b2, b3 = st.columns(3)
-delete = b1.button("Delete")
-save = b2.button("Save")
-post = b3.button("Post")
+b = row([1, 1, 1])
+delete = b.button("Delete", use_container_width=True)
+save = b.button("Save", use_container_width=True)
+post = b.button("Post", use_container_width=True)

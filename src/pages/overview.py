@@ -1,30 +1,35 @@
 import streamlit as st
+from streamlit_extras.row import row
 
 st.set_page_config(
    page_title="PostStream CMS - Overview",
    page_icon="🧊",
 )
 
-if st.button("Create new post"):
+st.title("Overview")
+a = row([1, 1])
+if a.button("Create new post", use_container_width=True):
     st.switch_page("pages/new_post.py")
-
-col1, col2 = st.columns(2)
-col1.title("Overview")
-col2.selectbox("Sort by", ("Date posted", "View count"))
+if a.button("Run build script", use_container_width=True):
+    print("test")
+    
 st.divider()
 
 def post(id):
-    col1, col2 = st.columns(2)
-    col1.text(id)
+    b = row([5, 1])
+    b.text("Why I made my own CMS\nPosted on 2024-10-03")
+    b.button("Edit", key=id, use_container_width=True)
 
-    b1, b2 = col2.columns(2)
-    
-    if b1.button("Analytics", key=id):
-        print("pressed")
-    if b2.button("Edit", key=f"{id}-2"):
-        print("pressed")
     st.divider()
 
 with st.container():
     post("test 1")
     post("test 2")
+
+
+c = row([4, 1, 1, 1, 4])
+c.empty()
+c.button("<")
+c.text("1 / 1")
+c.button("\>")
+c.empty()
