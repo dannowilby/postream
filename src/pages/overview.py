@@ -1,5 +1,6 @@
 import streamlit as st
 from streamlit_extras.row import row
+import db
 
 st.set_page_config(
    page_title="PostStream CMS - Overview",
@@ -9,27 +10,45 @@ st.set_page_config(
 st.title("Overview")
 a = row([1, 1])
 if a.button("Create new post", use_container_width=True):
+    st.session_state['editing'] = ''
     st.switch_page("pages/new_post.py")
 if a.button("Run build script", use_container_width=True):
     print("test")
     
 st.divider()
 
-def post(id):
+def post(entry):
     b = row([5, 1])
-    b.text("Why I made my own CMS\nPosted on 2024-10-03")
-    b.button("Edit", key=id, use_container_width=True)
-
+    date = entry[6]
+    b.text(f"{entry[0]}\nCreated {date.year}-{date.month}-{date.day}")
+    if b.button("Edit", key=entry[0], use_container_width=True):
+        print(entry)
+        st.session_state['editing'] = entry[1]
+        st.switch_page("pages/new_post.py")
+        
     st.divider()
 
 with st.container():
-    post("test 1")
-    post("test 2")
+    print(db.get_page())
+    for entry in db.get_page():
+        post(entry)
 
+
+total_pages = db.get_total_pages()
+
+def next_enabled():
+    return not st.session_state['page'] < total_pages
+def prev_enabled():
+    return not st.session_state['page'] > 1
+
+def next_page():
+    st.session_state['page'] += 1
+def prev_page():
+    st.session_state['page'] -= 1
 
 c = row([4, 1, 1, 1, 4])
 c.empty()
-c.button("<")
-c.text("1 / 1")
-c.button("\>")
+c.button("<", disabled=prev_enabled(), on_click=next_page)
+c.text(f"{st.session_state['page']} / {total_pages}")
+c.button("\>", disabled=next_enabled(), on_click=prev_page)
 c.empty()

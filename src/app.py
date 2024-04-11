@@ -1,36 +1,21 @@
 
 import streamlit as st
-import psycopg
+import db
 
 st.set_page_config(
    page_title="PostStream CMS",
    page_icon="🧊",
 )
 
-# Get database credentials from environment variables
-db_user = st.secrets["POSTGRES_USER"]
-db_password = st.secrets["POSTGRES_PASSWORD"]
-db_host = st.secrets["POSTGRES_HOST"]
-db_port = st.secrets["POSTGRES_PORT"]
-db_name = st.secrets["POSTGRES_DB"]
+# current page for pagination on overview
+if 'page' not in st.session_state:
+    st.session_state['page'] = 1
+# the current post you are editing, selected by the url(empty string for new post)
+if 'editing' not in st.session_state:
+    st.session_state['editing'] = ''
 
-print(db_password)
+db.init_post_table();
 
-# Connect to the PostgreSQL database
-with psycopg.connect(f"dbname={db_name} user={db_user} password={db_password} host={db_host} port={db_port}") as conn:
-    # Example query
-    with conn.cursor() as cur:
-        cur.execute("SELECT version();")
-        record = cur.fetchone()
-        print("Database version:", record)
-
-    # Close the connection
-    conn.close()
-
-# @st.cache_resource
-# conn = psycopg.connect();
-
-if 'current_page' not in st.session_state:
-    st.session_state['current_page'] = 'overview'
+print(db.get_total_pages())
 
 st.switch_page("pages/overview.py")
