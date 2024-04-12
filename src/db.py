@@ -1,4 +1,5 @@
 import math
+import functools
 import streamlit as st
 import psycopg
 from datetime import datetime
@@ -31,25 +32,28 @@ def init_post_table():
             url text,
             content text,
             tags text[],
+            uploaded_media text[],
             post_type text,
             template text,
             post_time timestamp with time zone
         );
         CREATE TABLE IF NOT EXISTS files (
-            img_name text,
-            img bytea
+            file_name text,
+            file bytea,
+            file_id uuid DEFAULT gen_random_uuid()
         );
     """)
     cur.close()
 
-def save_file(file):
+def save_media(media):
     """
     Can only save files up to 1gb (if the file is larger than 1gb you probably don't want it to be compiled into the page)
     returns True for success, False for exceptions
     """
+    query = "INSERT INTO files (file_name, file) VALUES " + ', '.join(list(map(lambda file: f"('{file.name}', '{file.getvalue()}')", media))) + ";"
     cur = db().cursor()
     try:
-        cur.execute(f"INSERT INTO files VALUES ('{file.name}', '{file.getvalue()}');")
+        cur.execute(query)
         db().commit()
     except:
         db().rollback()
@@ -57,12 +61,6 @@ def save_file(file):
         return False
         
     cur.close()
-    return True
-
-def save_media(media):
-    for file in media: # can reduce this to 1 insert call at some point if performance becomes an issue
-        if not save_file(file):
-            return False
     return True
     
 
