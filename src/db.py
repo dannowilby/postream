@@ -32,7 +32,7 @@ def init_post_table():
             url text,
             content text,
             tags text[],
-            uploaded_media text[],
+            uploaded_media text[][],
             post_type text,
             template text,
             post_time timestamp with time zone
@@ -45,31 +45,50 @@ def init_post_table():
     """)
     cur.close()
 
+def delete_media(uuid):
+    try:
+        cur.execute(query)
+        db().commit()
+        result = cur.fetchall()
+        return (True, result)
+    except:
+        db().rollback()
+        cur.close()
+    pass
+
 def save_media(media):
     """
     Can only save files up to 1gb (if the file is larger than 1gb you probably don't want it to be compiled into the page)
     returns True for success, False for exceptions
     """
-    query = "INSERT INTO files (file_name, file) VALUES " + ', '.join(list(map(lambda file: f"('{file.name}', '{file.getvalue()}')", media))) + ";"
+    if len(media) < 1:
+        return (True, [])
+    file_list = ', '.join(list(map(lambda file: f"('{file.name}', '{file.getvalue().hex()}')", media)))
+    query = "INSERT INTO files (file_name, file) VALUES " + file_list + " RETURNING file_name, file_id;"
     cur = db().cursor()
     try:
         cur.execute(query)
         db().commit()
+        result = cur.fetchall()
+        return (True, result)
     except:
         db().rollback()
         cur.close()
-        return False
+        return (False, [])
         
     cur.close()
-    return True
+    return (True, [])
     
-
+# need to add to uploaded files, not replace
 def update_post(original_url):
     def update(title, url, content, tags, media, type, template):
-        save_media(media)
+        saved = save_media(media)
+        if not saved[0]:
+            return False
+        saved = list(map(lambda result: [result[0], str(result[1])], saved[1]))
         cur = db().cursor()
         try:
-            cur.execute("UPDATE posts SET title = %s, url = %s, content = %s, tags = %s, post_type = %s, template = %s WHERE url = %s;", (title, url, content, tags, type, template, original_url))
+            cur.execute("UPDATE posts SET title = %s, url = %s, content = %s, tags = %s, uploaded_media = uploaded_media || %s, post_type = %s, template = %s WHERE url = %s;", (title, url, content, tags, saved, type, template, original_url))
             db().commit()
         except:
             db().rollback()
@@ -81,9 +100,12 @@ def update_post(original_url):
 def save_post(title, url, content, tags, media, type, template):
     cur = db().cursor()
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    save_media(media)
+    saved = save_media(media)
+    if not saved[0]:
+        return False
+    saved = list(map(lambda result: [result[0], str(result[1])], saved[1]))
     try:
-        cur.execute("INSERT INTO posts VALUES (%s, %s, %s, %s, %s, %s, %s);", (title, url, content, tags, type, template, now))
+        cur.execute("INSERT INTO posts VALUES (%s, %s, %s, %s, %s, %s, %s, %s);", (title, url, content, tags, saved, type, template, now))
         db().commit()
     except:
         db().rollback()

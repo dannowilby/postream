@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_extras.row import row
 from streamlit_tags import st_tags
+from streamlit_extras.grid import grid
 
 import db
 
@@ -11,11 +12,12 @@ st.set_page_config(
 
 new_post = st.session_state['editing'] == ''
 
-current_post = ("", "", "", [], "", "", "")
+current_post = ("", "", "", [], [], "", "", "")
 original_url = "" # save original url in case we need to update the db entry
 if not new_post:
     current_post = db.get_post(st.session_state['editing'])
     original_url = current_post[1]
+    print(current_post[4])
 
 if st.button("Back to overview"):
     st.switch_page("pages/overview.py")
@@ -32,12 +34,20 @@ tag_list = st_tags(label="Tags", value=current_post[3], text="Press enter to add
 
 files = st.file_uploader("Media", accept_multiple_files=True)
 
+if not new_post:
+    uploaded_files = grid([1, 1, 1])
+    for f in current_post[4]:
+        c = uploaded_files.container()
+        c.text(f[0])
+        if c.button("Delete", key=f[1], use_container_width=True):
+            db.delete_media(f[1])
+
 # add a field specifying uploaded media
 # might need to rethink this part
 
 project_type = st.selectbox("Post type", ("Article", "Project", "Art"))
 
-template = st.text_input("Template", value=current_post[5])
+template = st.text_input("Template", value=current_post[6])
 
 st.divider()
 
