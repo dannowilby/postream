@@ -13,7 +13,7 @@ if a.button("Create new post", use_container_width=True):
     st.session_state['editing'] = ''
     st.switch_page("pages/new_post.py")
 if a.button("Run build script", use_container_width=True):
-    print("test")
+    pass
     
 st.divider()
 
@@ -22,7 +22,6 @@ def post(entry):
     date = entry[6]
     b.text(f"{entry[0]}\nCreated {date.year}-{date.month}-{date.day}")
     if b.button("Edit", key=entry[0], use_container_width=True):
-        print(entry)
         st.session_state['editing'] = entry[1]
         st.switch_page("pages/new_post.py")
         

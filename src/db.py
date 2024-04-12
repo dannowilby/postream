@@ -50,7 +50,6 @@ def save_file(file):
     cur = db().cursor()
     try:
         cur.execute(f"INSERT INTO files VALUES ('{file.name}', '{file.getvalue()}');")
-        print(cur.fetchone())
         db().commit()
     except:
         db().rollback()
@@ -72,7 +71,6 @@ def update_post(original_url):
         save_media(media)
         cur = db().cursor()
         try:
-            print(f"{title}")
             cur.execute("UPDATE posts SET title = %s, url = %s, content = %s, tags = %s, post_type = %s, template = %s WHERE url = %s;", (title, url, content, tags, type, template, original_url))
             db().commit()
         except:
@@ -100,8 +98,7 @@ def save_post(title, url, content, tags, media, type, template):
 def get_post(url):
     cur = db().cursor()
     cur.execute(f"SELECT * FROM posts WHERE url = '{url}';")
-    result = cur.fetchone();
-    print(result);
+    result = cur.fetchone()
     cur.close()
     return result
 

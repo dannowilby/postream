@@ -16,6 +16,4 @@ if 'editing' not in st.session_state:
 
 db.init_post_table();
 
-print(db.get_total_pages())
-
 st.switch_page("pages/overview.py")
