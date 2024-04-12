@@ -60,15 +60,32 @@ def save_file(file):
     cur.close()
     return True
 
-def update_post(title, url, content, tags, media, type, template):
-    return True
-
-def save_post(title, url, content, tags, media, type, template):
+def save_media(media):
     for file in media: # can reduce this to 1 insert call at some point if performance becomes an issue
         if not save_file(file):
             return False
+    return True
+    
+
+def update_post(original_url):
+    def update(title, url, content, tags, media, type, template):
+        save_media(media)
+        cur = db().cursor()
+        try:
+            print(f"{title}")
+            cur.execute("UPDATE posts SET title = %s, url = %s, content = %s, tags = %s, post_type = %s, template = %s WHERE url = %s;", (title, url, content, tags, type, template, original_url))
+            db().commit()
+        except:
+            db().rollback()
+            cur.close()
+            return False
+        return True
+    return update
+
+def save_post(title, url, content, tags, media, type, template):
     cur = db().cursor()
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    save_media(media)
     try:
         cur.execute("INSERT INTO posts VALUES (%s, %s, %s, %s, %s, %s, %s);", (title, url, content, tags, type, template, now))
         db().commit()
