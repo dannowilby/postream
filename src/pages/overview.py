@@ -28,7 +28,7 @@ def post(entry):
     st.divider()
 
 with st.container():
-    for entry in db.get_page():
+    for entry in db.get_page(page=st.session_state['page']):
         post(entry)
 
 
@@ -46,7 +46,7 @@ def prev_page():
 
 c = row([4, 1, 1, 1, 4])
 c.empty()
-c.button("<", disabled=prev_enabled(), on_click=next_page)
+c.button("<", disabled=prev_enabled(), on_click=prev_page)
 c.text(f"{st.session_state['page']} / {total_pages}")
-c.button("\>", disabled=next_enabled(), on_click=prev_page)
+c.button("\>", disabled=next_enabled(), on_click=next_page)
 c.empty()

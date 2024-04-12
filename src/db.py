@@ -97,20 +97,20 @@ def save_post(title, url, content, tags, media, type, template):
 
 def get_post(url):
     cur = db().cursor()
-    cur.execute(f"SELECT * FROM posts WHERE url = '{url}';")
+    cur.execute("SELECT * FROM posts WHERE url = %s;", (url,))
     result = cur.fetchone()
     cur.close()
     return result
 
 def delete_post(url):
     cur = db().cursor()
-    cur.execute(f"DELETE FROM posts WHERE url = '{url}';")
+    cur.execute("DELETE FROM posts WHERE url = %s;", (url,))
     db().commit()
 
 def get_page(page=1, page_size=5):
     cur = db().cursor()
-    cur.execute(f"SELECT * FROM posts ORDER BY post_time DESC LIMIT {page_size};")
-    result = cur.fetchmany(page_size);
+    cur.execute(f"SELECT * FROM posts ORDER BY post_time DESC LIMIT {page_size} OFFSET {(page - 1) * page_size};")
+    result = cur.fetchmany(page_size)
     cur.close()
     return result
 
