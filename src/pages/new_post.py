@@ -12,8 +12,10 @@ st.set_page_config(
 new_post = st.session_state['editing'] == ''
 
 current_post = ("", "", "", [], "", "", "")
+original_url = "" # save original url in case we need to update the db entry
 if not new_post:
     current_post = db.get_post(st.session_state['editing'])
+    original_url = current_post[1]
 
 if st.button("Back to overview"):
     st.switch_page("pages/overview.py")
@@ -52,9 +54,8 @@ if b.button(escape, use_container_width=True):
         st.switch_page("pages/overview.py")
         
 
-# can be cleaner, will fix in the future
 if b.button("Save", type="primary", use_container_width=True):
-    save_func = db.save_post if new_post else db.update_post
+    save_func = db.save_post if new_post else db.update_post(original_url)
     success = save_func(title, url, post_contents, tag_list, files, project_type, template)
     if success:
         st.session_state['page'] = 1
