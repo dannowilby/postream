@@ -28,7 +28,6 @@ def post(entry):
     st.divider()
 
 with st.container():
-    print(db.get_page())
     for entry in db.get_page():
         post(entry)
 
