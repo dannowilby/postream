@@ -70,13 +70,9 @@ def save_post(title, url, content, tags, media, type, template):
     cur = db().cursor()
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     try:
-        # todo: remove hardcoded timezone
-        cur.execute(f"INSERT INTO posts VALUES ('{title}', '{url}', '{content}', ARRAY {tags}::text[], '{type}', '{template}', '{now}+08');")
+        cur.execute("INSERT INTO posts VALUES (%s, %s, %s, %s, %s, %s, %s);", (title, url, content, tags, type, template, now))
         db().commit()
-        # print(cur.fetchone())
     except:
-        print("PROBLEM")
-        #print(cur.fetchone())
         db().rollback()
         cur.close()
         return False
