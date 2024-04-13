@@ -45,16 +45,22 @@ def init_post_table():
     """)
     cur.close()
 
-def delete_media(uuid):
+def delete_media(url, uploaded, uuid):
+    # get an updated list of linked media without the file that we are deleting
+    updated_post_media = list(filter(lambda file: file[1] != uuid, uploaded))
+    cur = db().cursor()
     try:
-        cur.execute(query)
+        # update the post with the updated media list
+        cur.execute("UPDATE posts SET uploaded_media = %s WHERE url = %s;", (updated_post_media, url))
+        # remove the file from the file table
+        cur.execute("DELETE FROM files WHERE file_id = %s;", (uuid))
         db().commit()
-        result = cur.fetchall()
-        return (True, result)
+        cur.close()
+        return True
     except:
         db().rollback()
         cur.close()
-    pass
+    return False
 
 def save_media(media):
     """
@@ -79,7 +85,6 @@ def save_media(media):
     cur.close()
     return (True, [])
     
-# need to add to uploaded files, not replace
 def update_post(original_url):
     def update(title, url, content, tags, media, type, template):
         saved = save_media(media)

@@ -17,7 +17,6 @@ original_url = "" # save original url in case we need to update the db entry
 if not new_post:
     current_post = db.get_post(st.session_state['editing'])
     original_url = current_post[1]
-    print(current_post[4])
 
 if st.button("Back to overview"):
     st.switch_page("pages/overview.py")
@@ -34,16 +33,15 @@ tag_list = st_tags(label="Tags", value=current_post[3], text="Press enter to add
 
 files = st.file_uploader("Media", accept_multiple_files=True)
 
-if not new_post:
+if not new_post and current_post[4] != []:
+    st.text("Previously uploaded media")
     uploaded_files = grid([1, 1, 1])
     for f in current_post[4]:
         c = uploaded_files.container()
         c.text(f[0])
         if c.button("Delete", key=f[1], use_container_width=True):
-            db.delete_media(f[1])
-
-# add a field specifying uploaded media
-# might need to rethink this part
+            db.delete_media(original_url, current_post[4], f[1])
+            st.rerun()
 
 project_type = st.selectbox("Post type", ("Article", "Project", "Art"))
 
