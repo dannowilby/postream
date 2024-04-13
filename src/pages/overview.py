@@ -19,7 +19,7 @@ st.divider()
 
 def post(entry):
     b = row([5, 1])
-    date = entry[6]
+    date = entry[7]
     b.text(f"{entry[0]}\nCreated {date.year}-{date.month}-{date.day}")
     if b.button("Edit", key=entry[0], use_container_width=True):
         st.session_state['editing'] = entry[1]
