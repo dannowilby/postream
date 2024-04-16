@@ -1,4 +1,11 @@
 .venv
-.streamlit/secrets.toml
-data
-src/__pycache__
+.env
+
+data/postgres.env
+data/data
+
+frontend/src/__pycache__
+frontend/.streamlit/secrets.toml
+
+build-server/.env
+build-server/node_modules

@@ -84,12 +84,12 @@ def save_media(media):
         
     cur.close()
     return (True, [])
-    
+      
 def update_post(original_url):
     def update(title, url, content, tags, media, type, template):
         saved = save_media(media)
         if not saved[0]:
-            return False
+            return False  
         saved = list(map(lambda result: [result[0], str(result[1])], saved[1]))
         cur = db().cursor()
         try:
@@ -127,6 +127,7 @@ def get_post(url):
     cur.close()
     return result
 
+# Todo: delete all associated media with the post
 def delete_post(url):
     cur = db().cursor()
     cur.execute("DELETE FROM posts WHERE url = %s;", (url,))
