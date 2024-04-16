@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from streamlit_extras.row import row
 import db
@@ -13,7 +14,8 @@ if a.button("Create new post", use_container_width=True):
     st.session_state['editing'] = ''
     st.switch_page("pages/new_post.py")
 if a.button("Run build script", use_container_width=True):
-    pass
+    os.system(f"cd ../build-server && {st.session_state['build_command']}")
+    st.info("Build request sent.")
     
 st.divider()
 

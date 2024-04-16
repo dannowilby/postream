@@ -1,0 +1,11 @@
+
+secrets_file = ".env"
+
+[database]
+port = 5432
+
+[interface]
+port = 3000
+
+[build-server]
+build_command = "echo \"Put your build command here.\""
