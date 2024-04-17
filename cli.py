@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 import toml
 from dotenv import dotenv_values
 
@@ -24,15 +25,15 @@ def help():
 
 def run(args):
     # start the postgres server
-    os.system("docker run --name my_postgres -p 5432:5432 -v $(pwd)/data/data:/var/lib/postgresql/data --env-file ./data/postgres.env -d postgres")
+    subprocess.run("docker run --name my_postgres -p 5432:5432 -v $(pwd)/data/data:/var/lib/postgresql/data --env-file ./data/postgres.env -d postgres", shell=True)
     # start the streamlit frontend
-    os.system("cd frontend && streamlit run src/app.py")
+    subprocess.run("cd frontend && streamlit run src/app.py", shell=True)
 
 def build(args):
     # start the postgres server
-    os.system("docker run --name my_postgres -p 5432:5432 -v $(pwd)/data/data:/var/lib/postgresql/data --env-file ./data/postgres.env -d postgres")
+    subprocess.run("docker run --name my_postgres -p 5432:5432 -v $(pwd)/data/data:/var/lib/postgresql/data --env-file ./data/postgres.env -d postgres", shell=True)
     # run the build command
-    os.system(f"cd build-server && {config['build-server']['build_command']}")
+    subprocess.run(f"cd build-server && {config['build-server']['build_command']}", shell=True)
 
 # todo: could make this way more readable, might do in the future
 def setup(args):

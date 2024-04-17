@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from streamlit_extras.row import row
 import db
+import subprocess
 
 st.set_page_config(
    page_title="PostStream CMS - Overview",
@@ -14,7 +15,8 @@ if a.button("Create new post", use_container_width=True):
     st.session_state['editing'] = ''
     st.switch_page("pages/post.py")
 if a.button("Run build script", use_container_width=True):
-    os.system(f"cd ../build-server && {st.session_state['build_command']}")
+    command = f"cd ../build-server && {st.session_state['build_command']}"    
+    subprocess.run(command, shell=True)
     st.info("Build request sent.")
     
 st.divider()
