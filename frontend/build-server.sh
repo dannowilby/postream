@@ -1,1 +1,1 @@
-echo "Put your build command here"
+ping -c 10 google.com
