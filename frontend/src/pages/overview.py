@@ -15,9 +15,8 @@ if a.button("Create new post", use_container_width=True):
     st.session_state['editing'] = ''
     st.switch_page("pages/post.py")
 if a.button("Run build script", use_container_width=True):
-    command = f"cd ../build-server && {st.session_state['build_command']}"    
-    subprocess.run(command, shell=True)
-    st.info("Build request sent.")
+    st.session_state['build_id'] += 1
+    st.switch_page("pages/build_status.py")
     
 st.divider()
 

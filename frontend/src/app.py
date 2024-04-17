@@ -8,6 +8,7 @@ st.set_page_config(
 )
 
 with open("build-server.sh", "r") as file:
+    st.session_state['build_id'] = 0
     st.session_state['build_command'] = file.read()
   
 # current page for pagination on overview
