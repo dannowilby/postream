@@ -34,6 +34,7 @@ def build(args):
     # run the build command
     os.system(f"cd build-server && {config['build-server']['build_command']}")
 
+# todo: could make this way more readable, might do in the future
 def setup(args):
     # set the postgres, build server, and streamlit frontend postgres connection details / build command
 
@@ -69,7 +70,7 @@ def write_streamlit_secrets(secrets):
 if __name__ == '__main__':
     args = sys.argv
     if len(args) < 2:
-        print("Usage: ./postream.sh [OPTION]...")
+        print("Usage: ./postream.sh [COMMAND]")
         print("Try './postream.sh help' for more information.")
         sys.exit(0)
 

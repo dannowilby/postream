@@ -43,7 +43,9 @@ if not new_post and current_post[4] != []:
             db.delete_media(original_url, current_post[4], f[1])
             st.rerun()
 
-project_type = st.selectbox("Post type", ("Article", "Project", "Art"))
+project_types = ("Article", "Project", "Art")
+loaded_project_type = 0 if current_post[5] == 'Article' else 1 if current_post[5] == 'Project' else 2 if current_post[5] == 'Art' else None
+project_type = st.selectbox("Post type", project_types, index=loaded_project_type)
 
 template = st.text_input("Template", value=current_post[6])
 
