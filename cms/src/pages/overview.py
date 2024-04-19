@@ -3,11 +3,14 @@ import streamlit as st
 from streamlit_extras.row import row
 import db
 import subprocess
+import state
 
 st.set_page_config(
    page_title="PostStream CMS - Overview",
    page_icon="🧊",
 )
+
+state.initialize()
 
 st.title("Overview")
 a = row([1, 1])
