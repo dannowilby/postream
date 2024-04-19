@@ -4,6 +4,18 @@ postgres
 
 cms/src/__pycache__
 
-content/node_modules
+content/interface/node_modules
 
+content/svelte/.DS_Store
+content/svelte/node_modules
+content/svelte/build
+content/svelte/.svelte-kit
+content/svelte/package
+content/svelte/.env
+content/svelte/.env.*
+content/svelte/!.env.example
+content/svelte/vite.config.js.timestamp-*
+content/svelte/vite.config.ts.timestamp-*
+
+build/*
 legacy
