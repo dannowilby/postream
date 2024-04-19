@@ -2,11 +2,14 @@
 import streamlit as st
 import requests
 import os
+import state
 
 st.set_page_config(
    page_title="PostStream CMS - Build",
    page_icon="🧊",
 )
+
+state.initialize()
 
 st.title("Build")
 

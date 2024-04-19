@@ -3,12 +3,15 @@ from streamlit_extras.row import row
 from streamlit_tags import st_tags
 from streamlit_extras.grid import grid
 
+import state
 import db
 
 st.set_page_config(
    page_title="PostStream CMS - Create new post",
    page_icon="🧊",
 )
+
+state.initialize()
 
 new_post = st.session_state['editing'] == ''
 
