@@ -3,17 +3,21 @@ import functools
 import streamlit as st
 import psycopg
 from datetime import datetime
+import os
 
 @st.cache_resource
 def db():
     # Get database credentials from environment variables
-    db_user = st.secrets["POSTGRES_USER"]
-    db_password = st.secrets["POSTGRES_PASSWORD"]
-    db_host = st.secrets["POSTGRES_HOST"]
-    db_port = st.secrets["POSTGRES_PORT"]
-    db_name = st.secrets["POSTGRES_DB"]
+    # move away from using streamlit secrets because they're a bitch to integrate
+    db_user = os.environ.get("POSTGRES_USER") # st.secrets["POSTGRES_USER"]
+    db_pass = os.environ.get("POSTGRES_PASSWORD") # st.secrets["POSTGRES_PASSWORD"]
+    db_host = os.environ.get("POSTGRES_HOST") # st.secrets["POSTGRES_HOST"]
+    db_port = os.environ.get("POSTGRES_PORT") # st.secrets["POSTGRES_PORT"]
+    db_name = os.environ.get("POSTGRES_DB") # st.secrets["POSTGRES_DB"]
 
-    conn = psycopg.connect(f"dbname={db_name} user={db_user} password={db_password} host={db_host} port={db_port}", autocommit=True)
+    connection_details = f"dbname={db_name} user={db_user} password={db_pass} host={db_host} port={db_port}"
+    print(connection_details)
+    conn = psycopg.connect(connection_details, autocommit=True)
 
     return conn
 

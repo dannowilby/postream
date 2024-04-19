@@ -1,11 +1,9 @@
-.venv
 .env
 
-data/postgres.env
-data/data
+postgres
 
-frontend/src/__pycache__
-frontend/.streamlit/secrets.toml
+cms/src/__pycache__
 
-build-server/.env
-build-server/node_modules
+content/node_modules
+
+legacy
