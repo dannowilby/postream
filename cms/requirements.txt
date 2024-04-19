@@ -4,3 +4,4 @@ streamlit-extras
 streamlit-tags
 python-dotenv
 toml
+requests

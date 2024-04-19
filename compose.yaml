@@ -1,0 +1,39 @@
+services:
+  postgresdb:
+    image: postgres
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+  cms:
+    depends_on:
+      - postgresdb
+    build: ./cms
+    ports:
+      - ${CMS_PORT}:${CMS_PORT}
+    environment:
+      CONTENT_HOST: content
+      CONTENT_PORT: ${CONTENT_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: postgresdb
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  content:
+    build: ./content
+    depends_on:
+      - postgresdb
+    ports:
+      - ${CONTENT_PORT}:${CONTENT_PORT}
+    environment:
+      CONTENT_PORT: ${CONTENT_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: postgresdb
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
