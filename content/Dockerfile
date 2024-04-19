@@ -3,10 +3,12 @@ FROM node
 
 WORKDIR content
 
-COPY ./package.json .
-
-RUN npm install
-
+# could copy the files to better cache layers
+# need to mount the svelte build folder so that we
+# can get the compiled data
 COPY . .
 
-CMD ["node", "interface.js"]
+RUN cd interface && npm install
+RUN cd svelte && npm install
+
+CMD cd interface && node interface.js
