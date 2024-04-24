@@ -18,10 +18,14 @@ session = requests.Session()
 host = os.environ.get("CONTENT_HOST")
 port = os.environ.get("CONTENT_PORT")
 
-with session.get(f"http://{host}:{port}", headers=None, stream=True) as res:
-    for line in res.iter_lines():
-        if line:
-            st.write(line.decode('UTF-8'))
+@st.cache_resource
+def execute(id):
+    with session.get(f"http://{host}:{port}", headers=None, stream=True) as res:
+        for line in res.iter_lines():
+            if line:
+                st.write(line.decode('UTF-8'))
+
+execute(st.session_state['build_id'])
 
 st.info("Build script has finished executing.")
 if st.button("Back to overview", use_container_width=True):
